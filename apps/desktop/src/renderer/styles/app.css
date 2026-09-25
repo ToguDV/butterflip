@@ -1043,52 +1043,10 @@ svg.i {
   font-weight: 500;
 }
 
-.studycard__foot {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  row-gap: 4px;
-  gap: 6px;
-  margin-top: 20px;
-  color: var(--faint);
-  font-size: 12px;
-}
-
-.studycard__foot .kbd {
-  margin-left: 6px;
-}
-
-.studycard__foot .kbd:first-child {
-  margin-left: 0;
-}
-
-/* Panel de ayuda: tarjeta gris plana al lado de la tarjeta de estudio. */
-.sidepanel {
-  padding: 20px 18px;
-  border-radius: var(--radius-lg);
-  background: var(--panel);
-}
-
-.sidepanel__q {
-  margin: 10px 0 0;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.sidepanel .btn {
+/* Botón de revelar dentro de la tarjeta de estudio. */
+.btn--reveal {
   width: 100%;
-  margin-top: 18px;
-}
-
-.sidepanel__hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: 10px 0 0;
-  color: var(--faint);
-  font-size: 11px;
+  margin-top: 22px;
 }
 
 /* --------------------------------------------------------------------------
@@ -1468,7 +1426,6 @@ svg.i {
   }
 
   .study-grid {
-    grid-template-columns: minmax(0, 1fr) 248px;
     gap: 20px;
   }
 

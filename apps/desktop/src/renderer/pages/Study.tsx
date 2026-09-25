@@ -130,7 +130,7 @@ export default function Study() {
           <article className="studycard">
             <p className="overline">Front</p>
             <h2 className="studycard__q">{card.front}</h2>
-            {showBack && (
+            {showBack ? (
               <>
                 <hr className="studycard__rule" />
                 <p className="overline">Answer</p>
@@ -149,38 +149,13 @@ export default function Study() {
                     </button>
                   ))}
                 </div>
-                <footer className="studycard__foot">
-                  <span className="kbd">1</span><span className="kbd">2</span>
-                  <span className="kbd">3</span><span className="kbd">4</span>rate
-                  <span className="kbd">Space</span>flip
-                </footer>
-              </>
-            )}
-          </article>
-
-          <aside className="sidepanel">
-            {showBack ? (
-              <>
-                <p className="panel__label" style={{ margin: 0, fontSize: 13, fontWeight: 600 }}>
-                  Revealed
-                </p>
-                <p className="sidepanel__q">{card.front}</p>
-                <p className="sidepanel__hint"><span className="kbd">1</span>–<span className="kbd">4</span>to rate</p>
               </>
             ) : (
-              <>
-                <p className="overline">Before reveal</p>
-                <p className="sidepanel__hint" style={{ justifyContent: 'flex-start', margin: '4px 0 0' }}>
-                  Front only · no answer visible
-                </p>
-                <p className="sidepanel__q">{card.front}</p>
-                <button className="btn btn--primary" type="button" onClick={() => setShowBack(true)}>
-                  <Icon name="flip" size="sm" />Show answer
-                </button>
-                <p className="sidepanel__hint"><span className="kbd">Space</span>to reveal</p>
-              </>
+              <button className="btn btn--primary btn--reveal" type="button" onClick={() => setShowBack(true)}>
+                <Icon name="flip" size="sm" />Show answer
+              </button>
             )}
-          </aside>
+          </article>
         </div>
       </div>
     </div>
