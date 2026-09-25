@@ -57,32 +57,45 @@ const server = http.createServer((req, res) => {
     console.log('shot:', name);
   };
 
-  // 1) Dashboard: activity heatmap + decks
-  await page.goto(`${base}/renderer/index.html#/`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('text=Spanish Vocabulary', { timeout: 15000 });
-  await page.waitForTimeout(600);
-  await shot('01-dashboard.png');
+  // Fija el tema del app (localStorage) y recarga; se capturan las 5 tomas
+  // por tema: light (sin sufijo) y dark (sufijo -dark).
+  const setTheme = async (theme) => {
+    await page.goto(`${base}/renderer/index.html`, { waitUntil: 'networkidle' });
+    await page.evaluate((t) => localStorage.setItem('flashcards-theme', t), theme);
+    await page.reload({ waitUntil: 'networkidle' });
+  };
 
-  // 2) Study: card front, then revealed with the rating buttons
-  await page.goto(`${base}/renderer/index.html#/study`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('text=Show answer', { timeout: 15000 });
-  await shot('02-study-front.png');
-  await page.locator('button:has-text("Show answer")').first().click(); // el sidepanel voltea la tarjeta
-  await page.waitForSelector('text=Again', { timeout: 15000 });
-  await page.waitForTimeout(300);
-  await shot('03-study-answer.png');
+  for (const theme of ['light', 'dark']) {
+    const sfx = theme === 'dark' ? '-dark' : '';
+    await setTheme(theme);
 
-  // 3) Deck editor
-  await page.goto(`${base}/renderer/index.html#/deck/d2`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('text=What is a closure?', { timeout: 15000 });
-  await page.waitForTimeout(400);
-  await shot('04-deck-editor.png');
+    // 1) Dashboard: activity heatmap + decks
+    await page.goto(`${base}/renderer/index.html#/`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('text=Spanish Vocabulary', { timeout: 15000 });
+    await page.waitForTimeout(600);
+    await shot(`01-dashboard${sfx}.png`);
 
-  // 4) Whole dashboard (full heatmap, nothing clipped)
-  await page.goto(`${base}/renderer/index.html#/`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('text=Spanish Vocabulary', { timeout: 15000 });
-  await page.screenshot({ path: path.join(OUT, '05-dashboard-full.png'), fullPage: true });
-  console.log('shot: 05-dashboard-full.png');
+    // 2) Study: card front, then revealed with the rating buttons
+    await page.goto(`${base}/renderer/index.html#/study`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('text=Show answer', { timeout: 15000 });
+    await shot(`02-study-front${sfx}.png`);
+    await page.locator('button:has-text("Show answer")').first().click(); // el sidepanel voltea la tarjeta
+    await page.waitForSelector('text=Again', { timeout: 15000 });
+    await page.waitForTimeout(300);
+    await shot(`03-study-answer${sfx}.png`);
+
+    // 3) Deck editor
+    await page.goto(`${base}/renderer/index.html#/deck/d2`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('text=What is a closure?', { timeout: 15000 });
+    await page.waitForTimeout(400);
+    await shot(`04-deck-editor${sfx}.png`);
+
+    // 4) Whole dashboard (full heatmap, nothing clipped)
+    await page.goto(`${base}/renderer/index.html#/`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('text=Spanish Vocabulary', { timeout: 15000 });
+    await page.screenshot({ path: path.join(OUT, `05-dashboard-full${sfx}.png`), fullPage: true });
+    console.log(`shot: 05-dashboard-full${sfx}.png`);
+  }
 
   if (logs.length) console.log('\npage logs:\n' + logs.join('\n'));
   await browser.close();
