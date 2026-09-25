@@ -11,6 +11,15 @@ A modern, cross-platform flashcard application with GitHub-style activity heatma
 - **Cross-Device Sync**: Sync decks, cards, and review logs to a central Node.js/PostgreSQL server
 - **Cross-Platform**: Electron app for Linux, Windows, and macOS (Android via Capacitor planned)
 
+## Screenshots
+
+| Dashboard (activity heatmap) | Study | Deck editor |
+| --- | --- | --- |
+| ![Dashboard](docs/screenshots/01-dashboard.png) | ![Study](docs/screenshots/03-study-answer.png) | ![Deck editor](docs/screenshots/04-deck-editor.png) |
+
+Captured headlessly from the real renderer build (no display needed) with
+`tools/screenshot` — see [tools/screenshot/README.md](tools/screenshot/README.md).
+
 ## Architecture
 
 ```
@@ -104,15 +113,6 @@ node apps/server/dist/index.js
 2. The sync service collects local changes since `lastSyncedAt` and sends them to `/sync`.
 3. The server applies client changes (last-write-wins) and returns any newer server changes.
 4. The client applies server changes to its local DB and updates `lastSyncedAt`.
-
-## Screenshots
-
-| Dashboard (activity heatmap) | Study | Deck editor |
-| --- | --- | --- |
-| ![Dashboard](docs/screenshots/01-dashboard.png) | ![Study](docs/screenshots/03-study-answer.png) | ![Deck editor](docs/screenshots/04-deck-editor.png) |
-
-Captured headlessly from the real renderer build (no display needed) with
-`tools/screenshot` — see [tools/screenshot/README.md](tools/screenshot/README.md).
 
 ## Tech Stack
 
