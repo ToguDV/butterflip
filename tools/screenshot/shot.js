@@ -97,6 +97,26 @@ const server = http.createServer((req, res) => {
     console.log(`shot: 05-dashboard-full${sfx}.png`);
   }
 
+  // 5) Vista mobile (390×844 @3x, como design/capture.cjs): la session de
+  // estudio con la tarjeta revelada, por tema.
+  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3 });
+  const mobileShot = async (name) => {
+    await mobile.screenshot({ path: path.join(OUT, name) });
+    console.log('shot:', name);
+  };
+  for (const theme of ['light', 'dark']) {
+    const sfx = theme === 'dark' ? '-dark' : '';
+    await mobile.goto(`${base}/renderer/index.html`, { waitUntil: 'networkidle' });
+    await mobile.evaluate((t) => localStorage.setItem('flashcards-theme', t), theme);
+    await mobile.reload({ waitUntil: 'networkidle' });
+    await mobile.goto(`${base}/renderer/index.html#/study`, { waitUntil: 'networkidle' });
+    await mobile.waitForSelector('text=Show answer', { timeout: 15000 });
+    await mobile.locator('button:has-text("Show answer")').first().click();
+    await mobile.waitForSelector('text=Again', { timeout: 15000 });
+    await mobile.waitForTimeout(300);
+    await mobileShot(`06-study-mobile${sfx}.png`);
+  }
+
   if (logs.length) console.log('\npage logs:\n' + logs.join('\n'));
   await browser.close();
   server.close();

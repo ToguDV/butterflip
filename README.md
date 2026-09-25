@@ -1,8 +1,9 @@
 # Flashcards
 
 <p align="center">
-  <img src="docs/screenshots/01-dashboard.png" alt="Dashboard (light)" width="49%" />
-  <img src="docs/screenshots/01-dashboard-dark.png" alt="Dashboard (dark)" width="49%" />
+  <img src="docs/screenshots/06-study-mobile.png" alt="Study session (light, mobile)" width="280" />
+  &nbsp;
+  <img src="docs/screenshots/06-study-mobile-dark.png" alt="Study session (dark, mobile)" width="280" />
 </p>
 
 A modern, cross-platform flashcard application with GitHub-style activity heatmap and centralized sync server. Built as an MVP with offline-first architecture.
