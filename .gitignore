@@ -1,0 +1,10 @@
+node_modules/
+dist/
+release/
+*.log
+.env
+.DS_Store
+*.db
+tools/screenshot/out/
+tools/screenshot/renderer/
+.pi/

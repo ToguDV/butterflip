@@ -1,0 +1,16 @@
+{
+  "name": "flashcards-screenshot-tool",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Headless screenshot harness for the desktop renderer (no display required)",
+  "scripts": {
+    "seed": "node seed.js",
+    "stage": "node prepare.js",
+    "shot": "node shot.js",
+    "shots": "node seed.js && node prepare.js && node shot.js"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.55.0",
+    "sql.js": "^1.13.0"
+  }
+}

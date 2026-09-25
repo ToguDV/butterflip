@@ -1,0 +1,19 @@
+{
+  "name": "flashcards",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Flashcards app with heatmap and cross-device sync",
+  "scripts": {
+    "dev:server": "pnpm --filter server dev",
+    "dev:desktop": "pnpm --filter desktop dev",
+    "build:server": "pnpm --filter server build",
+    "build:desktop": "pnpm --filter desktop build",
+    "db:migrate": "pnpm --filter server db:migrate",
+    "db:generate": "pnpm --filter server db:generate",
+    "db:seed": "pnpm --filter server db:seed"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

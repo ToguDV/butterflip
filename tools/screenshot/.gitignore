@@ -1,0 +1,6 @@
+node_modules/
+out/
+renderer/
+sql-wasm.js
+sql-wasm.wasm
+flashcards.db

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: flashcards-postgres
+    environment:
+      POSTGRES_USER: flashcards
+      POSTGRES_PASSWORD: flashcards
+      POSTGRES_DB: flashcards
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    container_name: flashcards-server
+    environment:
+      DATABASE_URL: "postgresql://flashcards:flashcards@postgres:5432/flashcards?schema=public"
+      JWT_SECRET: "change-me-in-production"
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./apps/server:/app
+      - /app/node_modules
+    command: ["pnpm", "dev"]
+
+volumes:
+  postgres_data:
