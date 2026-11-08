@@ -135,12 +135,15 @@ pnpm --filter desktop build:preload           # solo preload
   (`createDeck`, `getDueCards`, `addReviewLog`, `getSyncMeta`, …).
 - UI con el design system **Soft Pop**: CSS global en `styles/app.css`
   (importado por `main.tsx`), sin librería de componentes ni CSS framework. Los
-  estilos inline quedan solo para casos puntuales (color de monograma y de
-  botones de rate vía la variable `--c`). `App.tsx` monta el shell: topbar con
+  estilos inline quedan solo para casos puntuales (color de monograma y
+  transform/opacidad del swipe). `App.tsx` monta el shell: topbar con
   marca y toggle Light/Dark (persistido en `localStorage`, clave
   `flashcards-theme`, aplicado antes del primer paint desde `index.html`) y tab
   bar flotante Dashboard · Study · Decks. Rutas: `/` (Home: heatmap + decks),
   `/deck/:deckId` (DeckEditor), `/study` (Study).
+- `components/SwipeCard.tsx` encapsula el gesto de Study: arrastre horizontal con
+  pointer events, umbral de 96px, animación de salida y dos sellos Again/Good. Los
+  botones del pie son el respaldo accesible y clickeable del gesto.
 
 **Checklist para agregar una operación de datos local:**
 
@@ -154,7 +157,9 @@ No llames a `window.electronAPI` directo desde componentes.
 
 ### 5.3 SRS (`renderer/srs/engine.ts`)
 
-- Ratings: `0=Again, 1=Hard, 2=Good, 3=Easy`.
+- Ratings: `0=Again, 1=Hard, 2=Good, 3=Easy` (el motor y la API aceptan los cuatro).
+- La UI de Study es **binaria**: swipe izquierda emite `0` y derecha `2` (o `←/→`).
+  Hard/Easy ya no se ofrecen porque en este motor `0/1` y `2/3` comparten efecto.
 - `rating >= 2` sube un nivel de intervalo; `0/1` baja uno. Intervalos fijos:
   `[1, 3, 7, 14, 30, 60, 120, 240]` días.
 - `easeFactor` se persiste (default 2.5) pero **no se usa todavía**; no hay SM-2.
@@ -234,7 +239,7 @@ pnpm --filter desktop build:renderer
 pnpm dev:server
 curl http://localhost:4000/health              # {"ok":true}
 
-# Smoke manual de la app: crear mazo → agregar tarjeta → estudiar 4 ratings → heatmap
+# Smoke manual de la app: crear mazo → agregar tarjeta → estudiar con swipe izquierda/derecha → heatmap
 ```
 
 Capturas (opcionales, requieren Playwright; ver READMEs de cada harness):
@@ -300,6 +305,9 @@ menos de 44px o si quedan PNG viejos en `design/screenshots/`.
    `*.db` y el staging de `tools/screenshot/` (`out/`, `renderer/`).
 10. **Nada de red en el flujo local.** El heatmap, el estudio y el CRUD leen/escriben solo
     SQLite; si algo necesita red, va por `syncService.ts`, no en componentes.
+11. **Study califica solo Again/Good.** El swipe y `←/→` emiten ratings `0` y `2`;
+    Hard/Easy siguen válidos en el motor, la API y los logs viejos, pero la UI no los
+    expone. Volver a cuatro opciones requiere otro gesto o atajos explícitos.
 
 ## 11. Roadmap (del README)
 

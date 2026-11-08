@@ -17,7 +17,8 @@ export type IconName =
   | 'flip'
   | 'grip'
   | 'check'
-  | 'arrow-left';
+  | 'arrow-left'
+  | 'arrow-right';
 
 const PATHS: Record<IconName, React.ReactNode> = {
   cards: (
@@ -88,6 +89,7 @@ const PATHS: Record<IconName, React.ReactNode> = {
   ),
   check: <path d="M5 12.5l4.5 4.5L19 7.5" />,
   'arrow-left': <path d="M19.5 12h-15M10 5.5L3.5 12 10 18.5" />,
+  'arrow-right': <path d="M4.5 12h15M14 5.5L20.5 12 14 18.5" />,
 };
 
 interface IconProps {

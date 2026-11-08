@@ -11,7 +11,7 @@ A modern, cross-platform flashcard application with GitHub-style activity heatma
 ## Features (MVP)
 
 - **Decks & Cards**: Create decks and add front/back cards
-- **SRS Study**: Simple spaced repetition with 1/3/7/14/30/60/120 day intervals
+- **SRS Study**: Simple spaced repetition with 1/3/7/14/30/60/120 day intervals and swipe-to-rate (left = Again, right = Good)
 - **Activity Heatmap**: Visualize your daily review streaks (GitHub-style)
 - **Offline-First**: All data stored locally in SQLite; study without internet
 - **Cross-Device Sync**: Sync decks, cards, and review logs to a central Node.js/PostgreSQL server
