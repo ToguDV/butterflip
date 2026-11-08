@@ -971,6 +971,53 @@ svg.i {
   background: var(--screen);
 }
 
+/* Swipe: la tarjeta sigue al puntero y vuelve sola si no se pasa el umbral.
+   touch-action pan-y deja el scroll vertical nativo, pero captura el gesto
+   horizontal. */
+.swipecard {
+  position: relative;
+}
+
+.studycard--swipe {
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.studycard--swipe.is-dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+/* Sellos que aparecen al arrastrar; SwipeCard maneja la opacidad. */
+.swipecard__badge {
+  position: absolute;
+  top: 14px;
+  z-index: 2;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.swipecard__badge--again {
+  left: 14px;
+  background: var(--error);
+  transform: rotate(-8deg);
+}
+
+.swipecard__badge--good {
+  right: 14px;
+  background: var(--success);
+  transform: rotate(8deg);
+}
+
 .studycard__q {
   margin: 10px 0 0;
   font-size: 22px;
@@ -1001,25 +1048,27 @@ svg.i {
   font-size: 13px;
 }
 
-/* Calificar: píldoras de color sólido; el texto usa --tc (blanco por
-   defecto, ink sobre amarillo). */
-.rate {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+/* Pistas de swipe: dos lados clicables como respaldo accesible del gesto. */
+.swipehint {
   margin-top: 26px;
 }
 
-.rate__btn {
+.swipehint__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.swipehint__btn {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 12px 6px 14px;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 12px;
   border: 0;
   border-radius: var(--radius-lg);
-  background: var(--c, var(--accent));
-  color: var(--tc, #ffffff);
+  color: var(--ink);
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 600;
@@ -1027,20 +1076,48 @@ svg.i {
   transition: filter 120ms ease, transform 120ms ease;
 }
 
-.rate__btn:hover {
-  filter: brightness(0.94);
+.swipehint__btn--again {
+  --side: var(--error);
+  background: color-mix(in srgb, var(--error) 12%, var(--screen));
 }
 
-.rate__btn:active {
-  transform: scale(0.97);
+.swipehint__btn--good {
+  --side: var(--success);
+  background: color-mix(in srgb, var(--success) 14%, var(--screen));
 }
 
-.rate__btn small {
-  color: var(--tc, #ffffff);
-  opacity: 0.72;
+.swipehint__btn svg {
+  color: var(--side);
+}
+
+.swipehint__btn:hover {
+  filter: brightness(0.96);
+}
+
+.swipehint__btn:active {
+  transform: scale(0.98);
+}
+
+.swipehint__btn small {
+  color: var(--muted);
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 500;
+}
+
+.swipehint__note {
+  margin: 10px 0 0;
+  color: var(--faint);
+  font-size: 11px;
+  text-align: center;
+}
+
+.swipehint__note .kbd {
+  min-width: 18px;
+  height: 18px;
+  margin: 0 2px;
+  padding: 0 4px;
+  font-size: 10px;
 }
 
 /* Botón de revelar dentro de la tarjeta de estudio. */

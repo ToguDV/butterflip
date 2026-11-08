@@ -3,14 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { getDueCards, getDecks, updateCard, addReviewLog } from '../db/localDb';
 import { computeNextReview } from '../srs/engine';
 import Icon from '../components/Icon';
+import SwipeCard, { type SwipeDirection } from '../components/SwipeCard';
 import type { Card, Deck } from '@flashcards/shared';
 
-const RATE_BUTTONS = [
-  { rating: 0, label: 'Again', c: 'var(--error)', tc: undefined },
-  { rating: 1, label: 'Hard', c: 'var(--butter)', tc: 'var(--ink)' },
-  { rating: 2, label: 'Good', c: 'var(--success)', tc: undefined },
-  { rating: 3, label: 'Easy', c: 'var(--blue-ink)', tc: undefined },
-] as const;
+// La UI de swipe es binaria: izquierda = fallaste, derecha = la sabías.
+const AGAIN = 0;
+const GOOD = 2;
 
 // Monograma: iniciales del mazo (dos letras).
 function initials(name: string): string {
@@ -60,7 +58,11 @@ export default function Study() {
     }
   }, [cards, index]);
 
-  // Atajos del design: Space voltea, 1–4 califican.
+  const handleSwipe = useCallback((direction: SwipeDirection) => {
+    void handleRate(direction === 'left' ? AGAIN : GOOD);
+  }, [handleRate]);
+
+  // Atajos: Space voltea, ←/→ califican como el swipe.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (finished) return;
@@ -69,8 +71,9 @@ export default function Study() {
         if (!showBack) setShowBack(true);
         return;
       }
-      if (showBack && ['1', '2', '3', '4'].includes(e.key)) {
-        void handleRate(Number(e.key));
+      if (showBack && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        e.preventDefault();
+        void handleRate(e.key === 'ArrowLeft' ? AGAIN : GOOD);
       }
     }
     window.addEventListener('keydown', onKey);
@@ -127,7 +130,7 @@ export default function Study() {
         <div className="progress"><i style={{ width: `${progress}%` }} /></div>
 
         <div className="study-grid">
-          <article className="studycard">
+          <SwipeCard key={card.id} disabled={!showBack} onSwipe={handleSwipe}>
             <p className="overline">Front</p>
             <h2 className="studycard__q">{card.front}</h2>
             {showBack ? (
@@ -135,19 +138,31 @@ export default function Study() {
                 <hr className="studycard__rule" />
                 <p className="overline">Answer</p>
                 <p className="studycard__a">{card.back}</p>
-                <div className="rate">
-                  {RATE_BUTTONS.map(({ rating, label, c, tc }) => (
+                <div className="swipehint">
+                  <div className="swipehint__row">
                     <button
-                      key={rating}
-                      className="rate__btn"
+                      className="swipehint__btn swipehint__btn--again"
                       type="button"
-                      style={{ '--c': c, ...(tc ? { '--tc': tc } : {}) } as React.CSSProperties}
-                      onClick={() => void handleRate(rating)}
+                      onClick={() => void handleRate(AGAIN)}
                     >
-                      {label}
-                      <small>{computeNextReview(card, rating).intervalDays}d</small>
+                      <Icon name="arrow-left" size="sm" />
+                      <span>Again</span>
+                      <small>{computeNextReview(card, AGAIN).intervalDays}d</small>
                     </button>
-                  ))}
+                    <button
+                      className="swipehint__btn swipehint__btn--good"
+                      type="button"
+                      onClick={() => void handleRate(GOOD)}
+                    >
+                      <small>{computeNextReview(card, GOOD).intervalDays}d</small>
+                      <span>Good</span>
+                      <Icon name="arrow-right" size="sm" />
+                    </button>
+                  </div>
+                  <p className="swipehint__note">
+                    Swipe the card left or right · <span className="kbd">←</span>
+                    <span className="kbd">→</span> keys
+                  </p>
                 </div>
               </>
             ) : (
@@ -155,7 +170,7 @@ export default function Study() {
                 <Icon name="flip" size="sm" />Show answer
               </button>
             )}
-          </article>
+          </SwipeCard>
         </div>
       </div>
     </div>

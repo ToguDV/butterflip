@@ -37,6 +37,9 @@ del preview:
 - Tipografía sin red: los stacks declaran Poppins/JetBrains Mono primero pero
   resuelven con fuentes del sistema si no están instaladas (la app es
   offline-first; no hay `@import` de Google Fonts).
+- Study califica con **swipe** izquierda/derecha (Again/Good) y `←/→`, con dos
+  botones-pista como respaldo accesible; el preview conserva los 4 ratings
+  históricos para mostrar el componente de calificación original.
 
 Si cambiás tokens o componentes en `styles.css`, replicá los cambios en
 `app.css` (están duplicados a propósito: el preview no consume código de la app).

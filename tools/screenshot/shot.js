@@ -75,12 +75,12 @@ const server = http.createServer((req, res) => {
     await page.waitForTimeout(600);
     await shot(`01-dashboard${sfx}.png`);
 
-    // 2) Study: card front, then revealed with the rating buttons
+    // 2) Study: card front, then revealed with the swipe hints
     await page.goto(`${base}/renderer/index.html#/study`, { waitUntil: 'networkidle' });
     await page.waitForSelector('text=Show answer', { timeout: 15000 });
     await shot(`02-study-front${sfx}.png`);
-    await page.locator('button:has-text("Show answer")').first().click(); // el sidepanel voltea la tarjeta
-    await page.waitForSelector('text=Again', { timeout: 15000 });
+    await page.locator('button:has-text("Show answer")').first().click();
+    await page.waitForSelector('text=Swipe the card', { timeout: 15000 });
     await page.waitForTimeout(300);
     await shot(`03-study-answer${sfx}.png`);
 
@@ -112,7 +112,7 @@ const server = http.createServer((req, res) => {
     await mobile.goto(`${base}/renderer/index.html#/study`, { waitUntil: 'networkidle' });
     await mobile.waitForSelector('text=Show answer', { timeout: 15000 });
     await mobile.locator('button:has-text("Show answer")').first().click();
-    await mobile.waitForSelector('text=Again', { timeout: 15000 });
+    await mobile.waitForSelector('text=Swipe the card', { timeout: 15000 });
     await mobile.waitForTimeout(300);
     await mobileShot(`06-study-mobile${sfx}.png`);
   }
